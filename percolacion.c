@@ -10,6 +10,8 @@
 
 float aleatorio(int *seed); 
 int poblar(int *red, int dim, float p);
+int imprimir(int *red, int dim);
+
 
 int main(int argc,char *argv[]){
 	int dim;
@@ -23,11 +25,12 @@ int main(int argc,char *argv[]){
 	int *red;
 	red = (int*)malloc(dim*dim*sizeof(int)); 
 
-
 	
 	//printf("%d %.1f",dim,p);	
 
 	poblar(red,dim,p); //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
+	imprimir(red,dim);	
+	
 }
 
 float aleatorio(int *seed){
@@ -49,16 +52,23 @@ int poblar(int *red, int dim, float p){
 	seed = (int*)malloc(sizeof(int));
 	*seed=rand();
 	
-
 	for (i=0; i<dim*dim; i++){
 		*(red+i)=0;
 		if(aleatorio(seed)<p){
 			*(red+i)=1;}
-		printf("%d", *(red+i)); 
 	}
-	printf("\n");
+	
 	return 0;
 }
 
-
+int imprimir(int *red, int dim){
+	
+	for (int i=0; i<dim; i++){
+		for (int j=0; j<dim; j++){
+			printf("%d ", *(red+i*dim+j));
+		}
+		printf("\n");
+	}
+	return 0;
+}
 
