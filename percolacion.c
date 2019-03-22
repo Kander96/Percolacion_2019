@@ -14,14 +14,20 @@ int poblar(int *red, int dim, float p);
 int main(int argc,char *argv[]){
 	int dim;
 	float p;
-	int *red;
-
+	dim=3;
+	p=0.5;
+	
 	sscanf(argv[1],"%i",&dim);
-	sscanf(argv[2],"%f",&p);
+	sscanf(argv[2],"%f",&p);	
+
+	int *red;
+	red = (int*)malloc(dim*dim*sizeof(int)); 
+
+
 	
 	//printf("%d %.1f",dim,p);	
 
-	//poblar(*red,dim,p); Esto no anduvo
+	poblar(red,dim,p); //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
 }
 
 float aleatorio(int *seed){
@@ -39,16 +45,20 @@ int poblar(int *red, int dim, float p){
 	int i;
 
 	srand(time(NULL));
-	int *seed= rand();
+	int *seed;
+	seed = (int*)malloc(sizeof(int));
+	*seed=rand();
+	
 
-	for (i=0; i<dim*dim; i=i+1){
+	for (i=0; i<dim*dim; i++){
 		*(red+i)=0;
-		if(aleatorio(*seed)<p){
+		if(aleatorio(seed)<p){
 			*(red+i)=1;}
 		printf("%d", *(red+i)); 
 	}
 	printf("\n");
 	return 0;
 }
+
 
 
