@@ -11,7 +11,7 @@
 float aleatorio(int *seed); 
 int poblar(int *red, int dim, float p);
 int imprimir(int *red, int dim);
-
+int clasificar(int *red, int dim);
 
 int main(int argc,char *argv[]){
 	int dim;
@@ -29,8 +29,11 @@ int main(int argc,char *argv[]){
 	//printf("%d %.1f",dim,p);	
 
 	poblar(red,dim,p); //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
-	imprimir(red,dim);	
+	imprimir(red,dim);
 	
+	clasificar(red,dim);	
+	printf("\n");
+	imprimir(red,dim);
 }
 
 float aleatorio(int *seed){
@@ -69,6 +72,68 @@ int imprimir(int *red, int dim){
 		}
 		printf("\n");
 	}
+	return 0;
+}
+
+int clasificar(int *red, int dim){
+
+	int label=2;
+	int s1,s2;
+	if(*red==1){	//esto se encarga del primer nodo
+		*red=label;
+		label++;
+		}
+	 
+	for (int j=1; j<dim; j++){	//esto se encarga de la primera fila
+		s1=*(red+j-1);
+		if(*(red+j)!=0){
+			if(s1==0){
+				*(red+j)=label;
+				label++;
+			}
+			else{
+				*(red+j)=s1;
+			}
+		}
+	}
+	
+	for(int i=1; i<dim; i++){
+		s1=*(red+(i-1)*dim);	//esto se encarga de la primera columna
+		if(*(red+i*dim)!=0){
+			if(s1==0){
+				*(red+i*dim)=label;
+				label++;
+			}
+			else{
+				*(red+i*dim)=s1;
+			}
+		}
+		for(int j=1; j<dim; j++){
+			s1=*(red+(i-1)*dim+j);
+			s2=*(red+i*dim+j-1);
+			if(*(red+i*dim+j)!=0){
+				if(s1*s2==0){
+					if(s1==s2){
+						*(red+i*dim+j)=label;
+						label++;
+					}
+					else if(s1!=0){
+						*(red+i*dim+j)=s1;
+					}
+					else{
+						*(red+i*dim+j)=s2;
+					}
+				}
+				//else{
+				//	hoshen();
+				//}	
+			}
+			
+		}
+	}
+	
+	
+
 	return 0;
 }
 
