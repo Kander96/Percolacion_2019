@@ -9,45 +9,72 @@
 #define A 16807
 
 float aleatorio(int *seed); 
-int poblar(int *red, int dim, float p);
+int asignar_proba(float *probabilidad,int *seed,int dim);
+int poblar(int *red, float *probabilidad,int dim, float p);
 int imprimir(int *red, int dim);
 int clasificar(int *red, int *hist,int dim);
 int hoshen(int *red,int *hist, int s1, int s2, int i);
 int corregir_etiqueta(int *red,int *hist, int dim);
 int percola(int *red, int dim);
 
+//cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
 
 int main(int argc,char *argv[]){
 	int dim;
 	float p;
 	dim=3;
-	p=0.5;
+	p=0.0;
 		
 	sscanf(argv[1],"%i",&dim);
-	sscanf(argv[2],"%f",&p);	
-
+	//sscanf(argv[2],"%f",&p);	
+	
+	float p_critica=0.0;
+	int N=100;
 	int *red;
 	red = (int*)malloc(dim*dim*sizeof(int)); 
+	int *seed;
+	seed = (int*)malloc(sizeof(int));
 	int *hist;
 	hist= (int*)malloc((dim*dim/2+2)*sizeof(int));
+	float *probabilidad;
+	probabilidad = (float*)malloc(dim*dim*sizeof(float));
 	
-	for(int i=0; i<(dim*dim/2+2); i++){
-		*(hist+i)=i;
+	srand(time(NULL));
+	
+	for(int j=1; j<N+1; j++){
+		
+		asignar_proba(probabilidad,seed,dim);
+		
+		int a=1;
+		p=0.0;
+		
+		for(int i=1; i<11; i++){
+			
+			p+=a*1/powl(2,i);
+			
+			//printf("%f ", p);
+			
+			poblar(red,probabilidad,dim,p); 
+			
+			clasificar(red,hist,dim);	
+			
+			corregir_etiqueta(red,hist,dim);
+			
+			//imprimir(red,dim);
+			
+			a=percola(red,dim);
+		}
+		
+		
+		//imprimir(red,dim);
+		//printf("%f",p);
+		//printf("\n");
+		p_critica+=p;
+	
 	}
-	
-	//printf("%d %.1f",dim,p);	
-
-	poblar(red,dim,p); //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
-	imprimir(red,dim);
-	
-	clasificar(red,hist,dim);	
-	
-	imprimir(red,dim);
-	corregir_etiqueta(red,hist,dim);
-	
-	imprimir(red,dim);
-	
-	percola(red,dim);
+	p_critica=p_critica/N;
+	printf("%f",p_critica);
+	printf("\n");
 }
 
 float aleatorio(int *seed){
@@ -57,21 +84,26 @@ float aleatorio(int *seed){
 	*seed=A*(*seed-k*Q)-k*R;
 	if (*seed < 0.0)
 		*seed=(*seed)+M;
-	x=(*seed)/(float) M;
+	x=(*seed)* 1.0/M;
 	return x;
 }
 
-int poblar(int *red, int dim, float p){
-	int i;
-
-	srand(time(NULL));
-	int *seed;
-	seed = (int*)malloc(sizeof(int));
-	*seed=rand();
+int asignar_proba(float *probabilidad,int *seed,int dim){
 	
-	for (i=0; i<dim*dim; i++){
+	*seed=rand();
+	for(int i=0; i<dim*dim; i++){
+		*(probabilidad+i)=aleatorio(seed);
+		//printf("%f ",*(probabilidad+i));
+	}
+	//printf("\n");
+	return 0;
+}
+
+int poblar(int *red, float *probabilidad, int dim, float p){
+	
+		for (int i=0; i<dim*dim; i++){
 		*(red+i)=0;
-		if(aleatorio(seed)<p){
+		if(*(probabilidad+i)<p){
 			*(red+i)=1;}
 	}
 	
@@ -95,6 +127,9 @@ int clasificar(int *red, int *hist, int dim){
 	int label=2;
 	int s1,s2;
 	
+	for(int i=0; i<(dim*dim/2+2); i++){
+		*(hist+i)=i;
+	}
 	
 	if(*red==1){	//esto se encarga del primer nodo
 		*red=label;
@@ -194,7 +229,7 @@ int percola(int *red,int dim){
 	int *perc1;
 	int *perc2;
 	int a,b,percola;
-	percola=0;
+	percola=1;
 	
 	perc1=(int*)malloc((dim*dim/2+2)*sizeof(int));
 	perc2=(int*)malloc((dim*dim/2+2)*sizeof(int));
@@ -211,11 +246,12 @@ int percola(int *red,int dim){
 	}	
 	for(int i=2; i<(dim*dim/2+2); i++){
 		if((*(perc1+i))*(*(perc2+i))!=0){
-			percola=1;
-			printf("El sistema percola!\n");
+			percola=-1;
+			//printf("El sistema percola!\n");
 			
 		}
 	}
 
 	return percola;
 }
+
