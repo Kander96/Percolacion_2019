@@ -21,15 +21,16 @@ int percola(int *red, int dim);
 
 int main(int argc,char *argv[]){
 	int dim;
-	float p;
-	dim=3;
-	p=0.0;
+	int item;
+	dim=4;
+	item=0;
+			
+	sscanf(argv[1],"%i",&dim);	
+	sscanf(argv[2],"%i",&item);
 		
-	sscanf(argv[1],"%i",&dim);
-	//sscanf(argv[2],"%f",&p);	
-	
+	float p;
 	float p_critica=0.0;
-	int N=100;
+	int N=1000; //hay que hacer la cuenta para fijar el N. 
 	int *red;
 	red = (int*)malloc(dim*dim*sizeof(int)); 
 	int *seed;
@@ -39,42 +40,45 @@ int main(int argc,char *argv[]){
 	float *probabilidad;
 	probabilidad = (float*)malloc(dim*dim*sizeof(float));
 	
-	srand(time(NULL));
+	if(item==1){
+		srand(time(NULL));
 	
-	for(int j=1; j<N+1; j++){
+		for(int j=1; j<N+1; j++){
 		
-		asignar_proba(probabilidad,seed,dim);
+			asignar_proba(probabilidad,seed,dim);
 		
-		int a=1;
-		p=0.0;
+			int a=1;
+			p=0.0;
 		
-		for(int i=1; i<11; i++){
+			for(int i=1; i<11; i++){
 			
-			p+=a*1/powl(2,i);
+				p+=a*1/powl(2,i);
 			
-			//printf("%f ", p);
+				//printf("%f ", p);
 			
-			poblar(red,probabilidad,dim,p); 
+				poblar(red,probabilidad,dim,p); 
 			
-			clasificar(red,hist,dim);	
+				clasificar(red,hist,dim);	
 			
-			corregir_etiqueta(red,hist,dim);
+				corregir_etiqueta(red,hist,dim);
 			
+				//imprimir(red,dim);
+			
+				a=percola(red,dim);
+			}
+		
+		
 			//imprimir(red,dim);
-			
-			a=percola(red,dim);
-		}
-		
-		
-		//imprimir(red,dim);
-		//printf("%f",p);
-		//printf("\n");
-		p_critica+=p;
+			//printf("%f",p);
+			//printf("\n");
+			p_critica+=p/N;
 	
+		}
+		//p_critica=p_critica/N;
+		printf("%f",p_critica);
+		printf("\n");
 	}
-	p_critica=p_critica/N;
-	printf("%f",p_critica);
-	printf("\n");
+	return 0;
 }
 
 float aleatorio(int *seed){
