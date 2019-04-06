@@ -30,7 +30,6 @@ int main(int argc,char *argv[]){
 		
 	float p;
 	float p_critica=0.0;
-	int N=1000; //hay que hacer la cuenta para fijar el N. 
 	int *red;
 	red = (int*)malloc(dim*dim*sizeof(int)); 
 	int *seed;
@@ -40,9 +39,13 @@ int main(int argc,char *argv[]){
 	float *probabilidad;
 	probabilidad = (float*)malloc(dim*dim*sizeof(float));
 	
-	if(item==1){
+	if(item==11){
 		srand(time(NULL));
-	
+		FILE *file;
+		int N=1000; //hay que hacer la cuenta para fijar el N.
+		float p_crit_cuad=0.0;
+		float sigma=0.0;
+		file=fopen("p.txt","w");
 		for(int j=1; j<N+1; j++){
 		
 			asignar_proba(probabilidad,seed,dim);
@@ -67,17 +70,44 @@ int main(int argc,char *argv[]){
 				a=percola(red,dim);
 			}
 		
-		
+			fprintf(file,"%f\n",p);
 			//imprimir(red,dim);
 			//printf("%f",p);
 			//printf("\n");
 			p_critica+=p/N;
-	
+			p_crit_cuad+=powl(p,2)/N;
 		}
-		//p_critica=p_critica/N;
-		printf("%f",p_critica);
-		printf("\n");
+		sigma=sqrt(p_crit_cuad-powl(p_critica,2));
+		//fprintf(file,"%f\t%f\n",sigma,p_critica);
+		printf("%f\t%f\n",sigma,p_critica);
+		fclose(file);
 	}
+	else if(item==12){
+		FILE * fp;
+		srand(time(NULL));
+		int N=100;
+		int D=100;
+		p=0.0;
+		fp=fopen("Distribucion de probabilidad.txt","w");
+		for(int i=0; i<N+1; i++){
+			int a=0;
+			float b=0.0;
+			for(int j=0; j<D; j++){
+			
+				asignar_proba(probabilidad,seed,dim);
+				poblar(red,probabilidad,dim,p);
+				clasificar(red,hist,dim);	
+				corregir_etiqueta(red,hist,dim);
+				a=percola(red,dim);
+				a=-(a-1)/2;
+				b+=a/(float) D;
+			}
+			fprintf(fp,"%f\t%f\n",p,b);
+			p+=1.0/N;
+		}
+		fclose(fp);
+	}
+	
 	return 0;
 }
 
