@@ -16,6 +16,7 @@ int clasificar(int *red, int *hist,int dim);
 int hoshen(int *red,int *hist, int s1, int s2, int i);
 int corregir_etiqueta(int *red,int *hist, int dim);
 int percola(int *red, int dim);
+int contar_clusters(int *red, int *clusters, int dim);
 
 //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
 
@@ -38,11 +39,13 @@ int main(int argc,char *argv[]){
 	hist= (int*)malloc((dim*dim/2+2)*sizeof(int));
 	float *probabilidad;
 	probabilidad = (float*)malloc(dim*dim*sizeof(float));
+	int *clusters;
+	clusters = (int*)malloc((dim*dim)*sizeof(int));
 	
 	if(item==11){
 		srand(time(NULL));
 		FILE *file;
-		int N=1000; //hay que hacer la cuenta para fijar el N.
+		int N=10000; //hay que hacer la cuenta para fijar el N.
 		float p_crit_cuad=0.0;
 		float sigma=0.0;
 		file=fopen("p.txt","w");
@@ -108,6 +111,16 @@ int main(int argc,char *argv[]){
 		fclose(fp);
 	}
 	
+	if(item==14){
+		p=0.5927;
+		asignar_proba(probabilidad,seed,dim);
+		poblar(red,probabilidad,dim,p);
+		clasificar(red,hist,dim);	
+		corregir_etiqueta(red,hist,dim);
+		contar_clusters(red,clusters,dim);
+		for(int i=0; i<32; i++)
+			printf("%i\t%i\n",i,*(clusters+i));
+	}	
 	return 0;
 }
 
@@ -287,5 +300,20 @@ int percola(int *red,int dim){
 	}
 
 	return percola;
+}
+
+int contar_clusters(int *red, int *clusters, int dim){
+	int *vect;
+	vect=(int*)malloc((dim*dim)*sizeof(int));
+	
+	for(int i=0; i<dim*dim; i++){
+		*(clusters+i)=0;
+		*(vect+i)=0;
+	}
+	for(int i =0; i<dim*dim; i++)
+		*(vect+*(red+i))+=1;
+	for(int i=0; i<dim*dim; i++)
+		*(clusters+*(vect+i))+=1;
+	return 0;
 }
 
