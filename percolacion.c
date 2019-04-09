@@ -52,7 +52,7 @@ int main(int argc,char *argv[]){
 	if(item==11){
 		FILE *file;
 		char filename[64];
-		int N=10000; //hay que hacer la cuenta para fijar el N.
+		int N=1000; //hay que hacer la cuenta para fijar el N.
 		//float p_crit_cuad=0.0;
 		//float sigma=0.0;
 		sprintf(filename, "probabilidad_critica_dim_%i.txt", dim);
@@ -110,15 +110,15 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==14){
-		p=0.55;
-		int N=100;
+		p=0.54;
+		int N=1000;
 		
 		for (int i=0; i<10; i++){
 			
 			p+=0.01;
 			char filename[64];
 			FILE *out;
-			sprintf(filename, "%.4f.txt", p);
+			sprintf(filename, "ej_1_4_p_%.4f_dim_%i.txt", p, dim);
 			out = fopen( filename, "w");
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -127,8 +127,10 @@ int main(int argc,char *argv[]){
 				corregir_etiqueta(red,hist,dim);
 				contar_clusters(red,clusters,dim);
 			}
-			for(int j=1; j<dim*dim+1; j++)
+			for(int j=1; j<dim*dim+1; j++){
 				fprintf(out,"%i\t%f\n",j,*(clusters+j)*1.0/N);
+				*(clusters+j)=0;
+			}
 			fclose(out);
 		}
 	}

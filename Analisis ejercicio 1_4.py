@@ -5,8 +5,9 @@ Created on Mon Apr  8 18:59:42 2019
 @author: kevin
 """
 import numpy as np
+from matplotlib import pyplot as plt
 
-p=np.linspace(0.55,0.65,11)
+
 
 def ajuste_lineal(x,y):
     N=len(x)    
@@ -15,8 +16,20 @@ def ajuste_lineal(x,y):
     a=(N*sum(x*y)-sum(x)*sum(y))/Delta
     return a,b
 
-for i in p:
-    datos=np.loadtxt("%.4f.txt" % i)
-    x=datos[:20,0]
-    y=np.log(datos[:20,1]/len(x))
-    a,b=ajuste_lineal(x,y)
+def testear_ajuste(dim):
+    p=np.linspace(0.55,0.64,10)
+    for i in p:
+        datos=np.loadtxt("ej_1_4_p_%.4f_dim_%i.txt" % (i,dim))
+        x=np.log(datos[:20,0])
+        y=np.log(datos[:20,1]/len(x))
+        a,b=ajuste_lineal(x,y)
+        
+        plt.plot(x,y,'.r')
+        plt.plot(x,a*x+b,'-g')
+        plt.title("p=%.4f" % i)
+        plt.ylabel('Log($n_s(p)$)')
+        plt.xlabel('s')
+        plt.grid()
+        plt.show()
+
+testear_ajuste(16)

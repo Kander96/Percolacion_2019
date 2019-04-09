@@ -7,14 +7,23 @@ Created on Sat Apr  6 17:19:57 2019
 import numpy as np
 from matplotlib import pyplot as plt
 
-p=np.loadtxt("p.txt")
-plt.hist(p,30)
+dim=np.array([4,16,32,64,128])
+f=open("sigmaVsPc.txt","w")
 
-p_c=np.mean(p)
-sigma=np.sqrt(np.var(p))
-gu=35
-
-f=open("sigmaVsPc.txt","a")
-f.write("%f\t" % sigma)
-f.write("%f\n" % p_c)
+for i in dim:
+    p=np.loadtxt("probabilidad_critica_dim_%i.txt" % i)
+    plt.hist(p,30)
+    plt.show()
+    
+    p_c=np.mean(p)
+    sigma=np.sqrt(np.var(p))
+    
+    f.write("%i\t" % i)
+    f.write("%f\t" % sigma)
+    f.write("%f\n" % p_c)
 f.close()
+
+datos=np.loadtxt("sigmaVsPc.txt")
+plt.plot(datos[1:,1],datos[1:,2],'.')
+
+datos[-2,1]
