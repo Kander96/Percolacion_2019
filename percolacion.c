@@ -40,7 +40,7 @@ int main(int argc,char *argv[]){
 	float *probabilidad;
 	probabilidad = (float*)malloc(dim*dim*sizeof(float));
 	int *clusters;
-	clusters = (int*)malloc((dim*dim)*sizeof(int));
+	clusters = (int*)malloc((dim*dim+1)*sizeof(int));
 	
 	if(item==11){
 		srand(time(NULL));
@@ -112,15 +112,27 @@ int main(int argc,char *argv[]){
 	}
 	
 	if(item==14){
-		p=0.5927;
-		asignar_proba(probabilidad,seed,dim);
-		poblar(red,probabilidad,dim,p);
-		clasificar(red,hist,dim);	
-		corregir_etiqueta(red,hist,dim);
-		contar_clusters(red,clusters,dim);
-		for(int i=0; i<32; i++)
-			printf("%i\t%i\n",i,*(clusters+i));
-	}	
+		p=0.55;
+		int N=100;
+		for (int i=0; i<10; i++){
+			
+			p+=0.01;
+			char filename[64];
+			FILE *out;
+			sprintf(filename, "%.4f.txt", p);
+			out = fopen( filename, "w");
+			for(int j=0; j<N; j++){
+				asignar_proba(probabilidad,seed,dim);
+				poblar(red,probabilidad,dim,p);
+				clasificar(red,hist,dim);	
+				corregir_etiqueta(red,hist,dim);
+				contar_clusters(red,clusters,dim);
+			}
+			for(int j=1; j<dim*dim+1; j++)
+				fprintf(out,"%i\t%f\n",j,*(clusters+j)*1.0/N);
+			fclose(out);
+		}
+	}
 	return 0;
 }
 
@@ -304,15 +316,15 @@ int percola(int *red,int dim){
 
 int contar_clusters(int *red, int *clusters, int dim){
 	int *vect;
-	vect=(int*)malloc((dim*dim)*sizeof(int));
+	vect=(int*)malloc((dim*dim+1)*sizeof(int));
 	
-	for(int i=0; i<dim*dim; i++){
-		*(clusters+i)=0;
+	for(int i=0; i<dim*dim+1; i++){
+		//*(clusters+i)=0;
 		*(vect+i)=0;
 	}
 	for(int i =0; i<dim*dim; i++)
 		*(vect+*(red+i))+=1;
-	for(int i=0; i<dim*dim; i++)
+	for(int i=1; i<dim*dim; i++)
 		*(clusters+*(vect+i))+=1;
 	return 0;
 }
