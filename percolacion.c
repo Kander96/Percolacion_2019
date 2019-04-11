@@ -52,7 +52,7 @@ int main(int argc,char *argv[]){
 	if(item==11){
 		FILE *file;
 		char filename[64];
-		int N=1000; //hay que hacer la cuenta para fijar el N.
+		int N=27000; //hay que hacer la cuenta para fijar el N.
 		//float p_crit_cuad=0.0;
 		//float sigma=0.0;
 		sprintf(filename, "probabilidad_critica_dim_%i.txt", dim);
@@ -85,8 +85,8 @@ int main(int argc,char *argv[]){
 	else if(item==12){
 		FILE * file;
 		char filename[64];
-		int N=100;
-		int D=10000;
+		int N=1000;
+		int D=27000;
 		p=0.0;
 		sprintf(filename, "distribucion_de_probabilidad_dim_%i.txt", dim);
 		file=fopen(filename,"w");
