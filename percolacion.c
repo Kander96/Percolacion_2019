@@ -22,6 +22,7 @@ int masa_percolante(int *red, int dim, int *c);
 
 
 //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
+//leberá los puntos después de usarlos en las funciones auxiliares, eso es mucho muy importante 
 
 int main(int argc,char *argv[]){
 	int dim;
@@ -85,14 +86,19 @@ int main(int argc,char *argv[]){
 	else if(item==12){
 		FILE * file;
 		char filename[64];
-		int N=1000;
-		int D=27000;
+		float f_1,f_2,b;
+		int a;
+		int N=800;
+		int n=100;
+		int D=1000;
+		sscanf(argv[3],"%f",&f_1);
+		sscanf(argv[4],"%f",&f_2);
 		p=0.0;
 		sprintf(filename, "distribucion_de_probabilidad_dim_%i.txt", dim);
 		file=fopen(filename,"w");
-		for(int i=0; i<N+1; i++){
-			int a=0;
-			float b=0.0;
+		for(int i=0; i<n; i++){
+			a=0;
+			b=0.0;
 			for(int j=0; j<D; j++){
 			
 				asignar_proba(probabilidad,seed,dim);
@@ -104,7 +110,39 @@ int main(int argc,char *argv[]){
 				b+=a/(float) D;
 			}
 			fprintf(file,"%f\t%f\n",p,b);
-			p+=1.0/N;
+			p+=f_1/n;
+		}
+		for(int i=0; i<N; i++){
+			a=0;
+			b=0.0;
+			for(int j=0; j<D; j++){
+			
+				asignar_proba(probabilidad,seed,dim);
+				poblar(red,probabilidad,dim,p);
+				clasificar(red,hist,dim);	
+				corregir_etiqueta(red,hist,dim);
+				a=percola(red,dim,c);
+				a=-(a-1)/2;
+				b+=a/(float) D;
+			}
+			fprintf(file,"%f\t%f\n",p,b);
+			p+=(f_2-f_1)/N;
+		}
+		for(int i=0; i<n+1; i++){
+			a=0;
+			b=0.0;
+			for(int j=0; j<D; j++){
+			
+				asignar_proba(probabilidad,seed,dim);
+				poblar(red,probabilidad,dim,p);
+				clasificar(red,hist,dim);	
+				corregir_etiqueta(red,hist,dim);
+				a=percola(red,dim,c);
+				a=-(a-1)/2;
+				b+=a/(float) D;
+			}
+			fprintf(file,"%f\t%f\n",p,b);
+			p+=(1.0-f_2)/n;
 		}
 		fclose(file);
 	}
@@ -205,7 +243,12 @@ int main(int argc,char *argv[]){
 		}
 		fclose(out);
 	}
-	
+	free(red);
+	free(seed);
+	free(c);
+	free(hist);
+	free(probabilidad);
+	free(clusters);
 	return 0;
 }
 
@@ -383,7 +426,8 @@ int percola(int *red,int dim, int *c){
 			*c=i;
 		}
 	}
-
+	free(perc1);
+	free(perc2);
 	return percola;
 }
 
@@ -399,6 +443,7 @@ int contar_clusters(int *red, int *clusters, int dim){
 		*(vect+*(red+i))+=1;
 	for(int i=1; i<dim*dim; i++)
 		*(clusters+*(vect+i))+=1;
+	free(vect);
 	return 0;
 }
 
