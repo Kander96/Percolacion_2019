@@ -27,11 +27,11 @@ int contar_clusters_no_percolantes(int *red, int *clusters, int dim, int *c);
 int main(int argc,char *argv[]){
 	int dim;
 	int item;
-	dim=4;
+	dim=194;
 	item=0;
 			
-	sscanf(argv[1],"%i",&dim);	
-	sscanf(argv[2],"%i",&item);
+	sscanf(argv[1],"%i",&item);	
+	
 	
 	srand(time(NULL));
 		
@@ -51,6 +51,8 @@ int main(int argc,char *argv[]){
 	clusters = (int*)malloc((dim*dim+1)*sizeof(int));
 	
 	if(item==11){
+		
+		sscanf(argv[2],"%i",&dim);
 		FILE *file;
 		char filename[64];
 		int N=27000; //hay que hacer la cuenta para fijar el N.
@@ -84,6 +86,7 @@ int main(int argc,char *argv[]){
 		fclose(file);
 	}
 	else if(item==12){
+		sscanf(argv[2],"%i",&dim);
 		FILE * file;
 		char filename[64];
 		float f_1,f_2,b;
@@ -150,15 +153,16 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==14){
-		p=0.54;
-		int N=1000;
+		sscanf(argv[2],"%i",&dim);
+		p=0.5919;
+		int N=10000;
+		int D=50;
 		
-		for (int i=0; i<10; i++){
+		for (int i=0; i<D+1; i++){
 			
-			p+=0.01;
 			char filename[64];
 			FILE *out;
-			sprintf(filename, "ej_1_4_p_%.4f_dim_%i.txt", p, dim);
+			sprintf(filename, "ej_1_4_p_%.5f_dim_%i.txt", p, dim);
 			out = fopen( filename, "w");
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -172,10 +176,12 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fclose(out);
+			p+=0.0001/D;
 		}
 	}
 	
 	else if(item==2){
+		sscanf(argv[2],"%i",&dim);
 		p=0.0;
 		char filename[64];
 		int m;
@@ -220,26 +226,34 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==3){
-		int m=0;
-		float D;
-		p=0.5927;
-		int N=1000;
-		for(int i=0; i<N; i++){
-			asignar_proba(probabilidad,seed,dim);
-			poblar(red,probabilidad,dim,p);
-			clasificar(red,hist,dim);	
-			corregir_etiqueta(red,hist,dim);
-			percola(red,dim,c);
-			m+=masa_percolante(red,dim,c);
+		sscanf(argv[2],"%f",&p);
+		//p=0.5927;
+		int m;
+		int N=2000;
+		int L=32;
+		char filename[64];
+		FILE *out;
+		sprintf(filename, "ej_3_p_%f.txt", p);
+		out = fopen( filename, "w");
+		for(int j=4; j<L+1; j++){
+			m=0;
+			for(int i=0; i<N; i++){
+				asignar_proba(probabilidad,seed,j);
+				poblar(red,probabilidad,j,p);
+				clasificar(red,hist,j);	
+				corregir_etiqueta(red,hist,j);
+				percola(red,j,c);
+				m+=masa_percolante(red,j,c);
+			}
+			//D=log(m)/log(dim);
+			fprintf(out,"%i\t%f\n",j,m*1.0/(N*j*j));
 		}
-		m=m*1.0/N;
-		D=log(m)/log(dim);
-		printf("%i\t%f\n",m,D);
+		fclose(out);
 	}
 	
 	else if(item==4){
 		dim=64;
-
+		printf("%i\n",dim);
 	}
 	
 	else if(item==5){
@@ -249,7 +263,7 @@ int main(int argc,char *argv[]){
 		FILE *out;
 		sprintf(filename, "ejercicio_5.txt");
 		out = fopen(filename,"w");
-		int N=27000;
+		int N=1000;
 		for(int i=0; i<31; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -270,7 +284,7 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==6){
-		//dim=6128;
+		sscanf(argv[2],"%i",&dim);
 		p=0.50;
 		float m_2=0.0;
 		char filename[64];

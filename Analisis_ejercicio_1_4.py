@@ -16,20 +16,29 @@ def ajuste_lineal(x,y):
     a=(N*sum(x*y)-sum(x)*sum(y))/Delta
     return a,b
 
-def testear_ajuste(dim):
-    p=np.linspace(0.55,0.64,10)
-    for i in p:
-        datos=np.loadtxt("ej_1_4_p_%.4f_dim_%i.txt" % (i,dim))
-        x=np.log(datos[:20,0])
-        y=np.log(datos[:20,1]/len(x))
+def testear_ajuste(dim,p):
+    
+    t=np.zeros(len(p))
+    for i in range(len(p)):
+        datos=np.loadtxt("ej_1_4_p_%.5f_dim_%i.txt" % (p[i],dim))
+        x=np.log(datos[:16,0])
+        y=np.log(datos[:16,1]/len(x))
         a,b=ajuste_lineal(x,y)
-        
+        t[i]=sum((y-(a*x+b))**2) 
+    """
         plt.plot(x,y,'.r')
         plt.plot(x,a*x+b,'-g')
-        plt.title("p=%.4f" % i)
+        plt.title("p=%.4f" % p[i])
         plt.ylabel('Log($n_s(p)$)')
-        plt.xlabel('s')
+        plt.xlabel('Log(s)')
         plt.grid()
         plt.show()
-
-testear_ajuste(16)
+    """    
+    return t
+p=np.linspace(0.59190,0.59200,51)    
+t=testear_ajuste(32,p)
+k=p[np.argmin(t)]
+print('$p_{crtitico}=$',k)
+plt.plot(p,t,'.')
+plt.plot(k,t[np.argmin(t)],'*r')
+plt.grid()
