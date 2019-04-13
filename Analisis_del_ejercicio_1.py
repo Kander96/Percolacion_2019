@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr  6 17:19:57 2019
-
 @author: kevin
 """
 import numpy as np
@@ -15,7 +14,7 @@ def ajuste_lineal(x,y):
     a=(N*sum(x*y)-sum(x)*sum(y))/Delta
     return a,b
 
-dim=np.array([4,16,32,64,128])
+dim=np.array([32,64,128])
 f=open("sigmaVsPc.txt","w")
 sigma=np.zeros(len(dim))
 p_c=np.zeros(len(dim))
@@ -39,4 +38,3 @@ print(b)
 plt.plot(sigma,p_c,'.')
 plt.plot(sigma,a*sigma+b,'-')
 plt.show()
-

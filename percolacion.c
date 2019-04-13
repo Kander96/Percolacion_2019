@@ -19,10 +19,9 @@ int percola(int *red, int dim, int *c);
 int contar_clusters(int *red, int *clusters, int dim);
 int masa_total(int *red, int dim);
 int masa_percolante(int *red, int dim, int *c);
-int contar_clusters_no_percolantes(int *red, int *clusters, int dim, int *c);
+
 
 //cuando le paso una variable a una funcion no pongo el asterisco a los punteros.
-//leberá los puntos después de usarlos en las funciones auxiliares, eso es mucho muy importante 
 
 int main(int argc,char *argv[]){
 	int dim;
@@ -42,7 +41,7 @@ int main(int argc,char *argv[]){
 	int *seed;
 	seed = (int*)malloc(sizeof(int));
 	int *c;
-	c=(int*)malloc(dim*sizeof(int));
+	c=(int*)malloc(sizeof(int));
 	int *hist;
 	hist= (int*)malloc((dim*dim/2+2)*sizeof(int));
 	float *probabilidad;
@@ -86,19 +85,14 @@ int main(int argc,char *argv[]){
 	else if(item==12){
 		FILE * file;
 		char filename[64];
-		float f_1,f_2,b;
-		int a;
-		int N=800;
-		int n=100;
+		int N=1000;
 		int D=27000;
-		sscanf(argv[3],"%f",&f_1);
-		sscanf(argv[4],"%f",&f_2);
 		p=0.0;
 		sprintf(filename, "distribucion_de_probabilidad_dim_%i.txt", dim);
 		file=fopen(filename,"w");
-		for(int i=0; i<n; i++){
-			a=0;
-			b=0.0;
+		for(int i=0; i<N+1; i++){
+			int a=0;
+			float b=0.0;
 			for(int j=0; j<D; j++){
 			
 				asignar_proba(probabilidad,seed,dim);
@@ -110,41 +104,7 @@ int main(int argc,char *argv[]){
 				b+=a/(float) D;
 			}
 			fprintf(file,"%f\t%f\n",p,b);
-			p+=f_1/n;
-		}
-		printf("primera etapa\n");
-		for(int i=0; i<N; i++){
-			a=0;
-			b=0.0;
-			for(int j=0; j<D; j++){
-			
-				asignar_proba(probabilidad,seed,dim);
-				poblar(red,probabilidad,dim,p);
-				clasificar(red,hist,dim);	
-				corregir_etiqueta(red,hist,dim);
-				a=percola(red,dim,c);
-				a=-(a-1)/2;
-				b+=a/(float) D;
-			}
-			fprintf(file,"%f\t%f\n",p,b);
-			p+=(f_2-f_1)/N;
-		}
-		printf("ya casi\n");
-		for(int i=0; i<n+1; i++){
-			a=0;
-			b=0.0;
-			for(int j=0; j<D; j++){
-			
-				asignar_proba(probabilidad,seed,dim);
-				poblar(red,probabilidad,dim,p);
-				clasificar(red,hist,dim);	
-				corregir_etiqueta(red,hist,dim);
-				a=percola(red,dim,c);
-				a=-(a-1)/2;
-				b+=a/(float) D;
-			}
-			fprintf(file,"%f\t%f\n",p,b);
-			p+=(1.0-f_2)/n;
+			p+=1.0/N;
 		}
 		fclose(file);
 	}
@@ -179,16 +139,13 @@ int main(int argc,char *argv[]){
 		p=0.0;
 		char filename[64];
 		int m;
-		float a;
-		sscanf(argv[3],"%f",&a);
 		float P_inf=0.0;
-		int N=27000;
-		int D_1=100;
-		int D_2=900;
+		int N=1000;
+		int D=100;
 		FILE *out;
-		sprintf(filename, "intensidad_dim_%i.txt", dim);
+		sprintf(filename, "archivo%i.txt", dim);
 		out = fopen(filename,"w");
-		for(int i=0; i<D_1; i++){
+		for(int i=0; i<D+1; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
@@ -200,21 +157,7 @@ int main(int argc,char *argv[]){
 			}
 			P_inf=P_inf/N;
 			fprintf(out,"%f\t%f\n",p,P_inf);
-			p+=a/D_1;
-		}
-		for(int i=0; i<D_2+1; i++){
-			for(int j=0; j<N; j++){
-				asignar_proba(probabilidad,seed,dim);
-				poblar(red,probabilidad,dim,p);
-				clasificar(red,hist,dim);	
-				corregir_etiqueta(red,hist,dim);
-				percola(red,dim,c);
-				m=masa_percolante(red,dim,c);
-				P_inf+=m*1.0/(dim*dim);
-			}
-			P_inf=P_inf/N;
-			fprintf(out,"%f\t%f\n",p,P_inf);
-			p+=(1.0-a)/D_2;
+			p+=1.0/D;
 		}
 		fclose(out);
 	}
@@ -237,19 +180,13 @@ int main(int argc,char *argv[]){
 		printf("%i\t%f\n",m,D);
 	}
 	
-	else if(item==4){
-		dim=64;
-
-	}
-	
 	else if(item==5){
 		p=0.57;
-		dim=64;
 		char filename[64];
 		FILE *out;
 		sprintf(filename, "ejercicio_5.txt");
 		out = fopen(filename,"w");
-		int N=27000;
+		int N=1000;
 		for(int i=0; i<31; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -268,38 +205,6 @@ int main(int argc,char *argv[]){
 		}
 		fclose(out);
 	}
-	
-	else if(item==6){
-		//dim=6128;
-		p=0.50;
-		float m_2=0.0;
-		char filename[64];
-		FILE *out;
-		sprintf(filename, "ejercicio_6.txt");
-		out = fopen(filename,"w");
-		int N=1000;
-		for(int i=0; i<200; i++){
-			for(int j=0; j<N; j++){
-				asignar_proba(probabilidad,seed,dim);
-				poblar(red,probabilidad,dim,p);
-				clasificar(red,hist,dim);	
-				corregir_etiqueta(red,hist,dim);
-				percola(red,dim,c);
-				contar_clusters_no_percolantes(red,clusters,dim,c);
-			}
-			fprintf(out,"%f\t",p);
-			for(int j=1; j<dim*dim+1; j++){
-				m_2+=*(clusters+j)*j*j*1.0/N;
-				*(clusters+j)=0;
-			}
-			fprintf(out,"%f\n",m_2);
-			p+=0.001;
-			printf("%f\n",p);
-			m_2=0.0;
-		}
-		fclose(out);
-	}
-	
 	free(red);
 	free(seed);
 	free(c);
@@ -461,10 +366,8 @@ int percola(int *red,int dim, int *c){
 	int *perc1;
 	int *perc2;
 	int a,b,percola;
-	int j=0;
 	percola=1;
-	for(int i=0; i<dim; i++)
-		*(c+i)=0;
+	*c=0;
 	
 	perc1=(int*)malloc((dim*dim/2+2)*sizeof(int));
 	perc2=(int*)malloc((dim*dim/2+2)*sizeof(int));
@@ -482,8 +385,7 @@ int percola(int *red,int dim, int *c){
 	for(int i=2; i<(dim*dim/2+2); i++){
 		if((*(perc1+i))*(*(perc2+i))!=0){
 			percola=-1;
-			*(c+j)=i;
-			j++;
+			*c=i;
 		}
 	}
 	free(perc1);
@@ -527,28 +429,6 @@ int masa_percolante(int *red, int dim, int *c){
 		}
 	}
 	return m;
-}
-
-int contar_clusters_no_percolantes(int *red, int *clusters, int dim, int *c){
-	int *vect;
-	vect=(int*)malloc((dim*dim+1)*sizeof(int));
-	
-	for(int i=0; i<dim*dim+1; i++)
-		*(vect+i)=0;
-		
-	for(int i=0; i<dim; i++){
-		for(int j=0; j<dim*dim; j++){
-			if(*(red+j)==*(c+i))
-				*(red+j)=0;
-		}
-	}
-	
-	for(int i =0; i<dim*dim; i++)
-		*(vect+*(red+i))+=1;
-	for(int i=1; i<dim*dim; i++)
-		*(clusters+*(vect+i))+=1;
-	free(vect);
-	return 0;
 }
 
 
