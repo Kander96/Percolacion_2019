@@ -15,7 +15,7 @@ def ajuste_lineal(x,y):
     a=(N*sum(x*y)-sum(x)*sum(y))/Delta
     return a,b
 
-dim=np.array([32,64,128])
+dim=np.array([4,16,32,64,128])
 f=open("sigmaVsPc.txt","w")
 sigma=np.zeros(len(dim))
 p_c=np.zeros(len(dim))
