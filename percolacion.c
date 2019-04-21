@@ -154,15 +154,15 @@ int main(int argc,char *argv[]){
 	
 	else if(item==14){
 		sscanf(argv[2],"%i",&dim);
-		p=0.5919;
-		int N=10000;
-		int D=50;
+		p=0.5620;
+		int N=27000;
+		int D=400;
 		
 		for (int i=0; i<D+1; i++){
 			
 			char filename[64];
 			FILE *out;
-			sprintf(filename, "ej_1_4_p_%.5f_dim_%i.txt", p, dim);
+			sprintf(filename, "ej_1_4_p_%.4f_dim_%i.txt", p, dim);
 			out = fopen( filename, "w");
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -176,7 +176,7 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fclose(out);
-			p+=0.0001/D;
+			p+=0.0001;
 		}
 	}
 	
@@ -252,19 +252,42 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==4){
+		p=0.59;
 		dim=64;
-		printf("%i\n",dim);
+		char filename[64];
+		FILE *out;
+		sprintf(filename, "ejercicio_4.txt");
+		out = fopen(filename,"w");
+		int N=27000;
+		for(int i=0; i<51; i++){
+			for(int j=0; j<N; j++){
+				asignar_proba(probabilidad,seed,dim);
+				poblar(red,probabilidad,dim,p);
+				clasificar(red,hist,dim);	
+				corregir_etiqueta(red,hist,dim);
+				percola(red,dim,c);
+				contar_clusters_no_percolantes(red,clusters,dim,c);
+			}
+			fprintf(out,"%f\t",p);
+			for(int j=40; j<500; j++){
+				fprintf(out,"%f\t",*(clusters+j)*1.0/N);
+				*(clusters+j)=0;
+			}
+			fprintf(out,"\n");
+			p+=0.0001;
+		}
+		fclose(out);
 	}
 	
 	else if(item==5){
-		p=0.57;
+		p=0.5875;
 		dim=64;
 		char filename[64];
 		FILE *out;
 		sprintf(filename, "ejercicio_5.txt");
 		out = fopen(filename,"w");
-		int N=1000;
-		for(int i=0; i<31; i++){
+		int N=27000;
+		for(int i=0; i<101; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
@@ -278,7 +301,7 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fprintf(out,"\n");
-			p+=0.001;
+			p+=0.0001;
 		}
 		fclose(out);
 	}
@@ -289,10 +312,10 @@ int main(int argc,char *argv[]){
 		float m_2=0.0;
 		char filename[64];
 		FILE *out;
-		sprintf(filename, "ejercicio_6.txt");
+		sprintf(filename, "ejercicio_6_dim_%i.txt", dim);
 		out = fopen(filename,"w");
-		int N=1000;
-		for(int i=0; i<200; i++){
+		int N=27000;
+		for(int i=0; i<150; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
@@ -308,7 +331,7 @@ int main(int argc,char *argv[]){
 			}
 			fprintf(out,"%f\n",m_2);
 			p+=0.001;
-			printf("%f\n",p);
+			//printf("%f\n",p);
 			m_2=0.0;
 		}
 		fclose(out);
