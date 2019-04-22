@@ -154,29 +154,30 @@ int main(int argc,char *argv[]){
 	
 	else if(item==14){
 		sscanf(argv[2],"%i",&dim);
-		p=0.5620;
+		p=0.58;
 		int N=27000;
-		int D=400;
+		int D=20;
 		
 		for (int i=0; i<D+1; i++){
 			
 			char filename[64];
 			FILE *out;
-			sprintf(filename, "ej_1_4_p_%.4f_dim_%i.txt", p, dim);
+			sprintf(filename, "ej_1_d_p_%.4f_dim_%i.txt", p, dim);
 			out = fopen( filename, "w");
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
 				clasificar(red,hist,dim);	
 				corregir_etiqueta(red,hist,dim);
-				contar_clusters(red,clusters,dim);
+				percola(red,dim,c);
+				contar_clusters_no_percolantes(red,clusters,dim,c);
 			}
 			for(int j=1; j<dim*dim+1; j++){
 				fprintf(out,"%i\t%f\n",j,*(clusters+j)*1.0/N);
 				*(clusters+j)=0;
 			}
 			fclose(out);
-			p+=0.0001;
+			p+=0.001;
 		}
 	}
 	

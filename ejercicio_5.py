@@ -12,8 +12,15 @@ from matplotlib import pyplot as plt
 datos=np.loadtxt('ejercicio_5.txt')
 
 p_c=0.5925
-sigma=(3*48)/(4*91)
+sigma_inf=(3*48)/(4*91)
 s=np.arange(1,16,1)
+
+def ajuste_lineal(x,y):
+    N=len(x)    
+    Delta=N*sum(x**2)-sum(x)**2
+    b=(sum(x**2)*sum(y)-sum(x)*sum(x*y))/Delta
+    a=(N*sum(x*y)-sum(x)*sum(y))/Delta
+    return a,b
 
 def funcion(j):
     z=[]
@@ -27,6 +34,21 @@ def funcion(j):
     plt.yscale('log')
     plt.grid(True,'minor')
     plt.show()
+
+p_max=np.zeros(len(datos[0,:])-1)
+for i in range(len(datos[0,:])-1):
+    p_max[i]=max(datos[:,i+1])
+
+x=np.log(s)
+y=np.log(p_max-p_c)
+
+a,b=ajuste_lineal(x[:8],y[:8])
+sigma=-a
+
+plt.plot(x,y,'.')
+plt.plot(x,a*x+b,'-')
+
+print(sigma)
     
 for j in range(101):
     funcion(j)
