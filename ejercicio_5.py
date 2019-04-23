@@ -26,13 +26,13 @@ def funcion(j):
     z=[]
     f_z=[]
     for i in range(101):
-        z=np.append(z,(s**sigma)*(datos[i,0]-datos[j,0]))
+        z=np.append(z,(s**sigma_inf)*(datos[i,0]-datos[j,0]))
         f_z=np.append(f_z,datos[i,1:]/datos[j,1:])
     
     plt.plot(z,f_z,'.')
     plt.title('p=%.4f' % datos[j,0])
-    plt.yscale('log')
-    plt.grid(True,'minor')
+    #plt.yscale('log')
+    plt.grid(True)
     plt.show()
 
 p_max=np.zeros(len(datos[0,:])-1)
@@ -47,8 +47,9 @@ sigma=-a
 
 plt.plot(x,y,'.')
 plt.plot(x,a*x+b,'-')
+plt.show()
 
-print(sigma)
+print('sigma=',sigma)
     
 for j in range(101):
     funcion(j)

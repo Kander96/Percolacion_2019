@@ -154,9 +154,9 @@ int main(int argc,char *argv[]){
 	
 	else if(item==14){
 		sscanf(argv[2],"%i",&dim);
-		p=0.58;
+		p=0.4;
 		int N=27000;
-		int D=20;
+		int D=60;
 		
 		for (int i=0; i<D+1; i++){
 			
@@ -177,7 +177,7 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fclose(out);
-			p+=0.001;
+			p+=0.005;
 		}
 	}
 	

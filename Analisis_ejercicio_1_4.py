@@ -22,8 +22,8 @@ def testear_ajuste(dim,p):
     a=np.zeros(len(p))
     for i in range(len(p)):
         datos=np.loadtxt("ej_1_d_p_%.4f_dim_%i.txt" % (p[i],dim))
-        x=np.log(datos[int(dim**2*0.001):int((dim**2)*0.02),0])
-        y=np.log(datos[int(dim**2*0.001):int((dim**2)*0.02),1]/len(x))
+        x=np.log(datos[int(dim**2*0.001):int((dim**2)*0.12),0])
+        y=np.log(datos[int(dim**2*0.001):int((dim**2)*0.12),1]/len(x))
         a[i],b=ajuste_lineal(x,y)
         t[i]=sum((y-(a[i]*x+b))**2) 
     """
@@ -37,7 +37,7 @@ def testear_ajuste(dim,p):
     """    
     return t,a
 #r=np.array([[16,0.5882,0.5892,101],[32,0.5917,0.5921,41],[64,0.5922,0.5926,41],[128,0.5924,0.5928,41]])
-r=np.array([[64,0.58,0.6,21],[128,0.58,0.6,21]])
+r=np.array([[16,0.4,0.7,61],[32,0.5,0.7,41]])
 
 for i in range(len(r)):
     p=np.linspace(r[i,1],r[i,2],r[i,3])    
@@ -49,5 +49,5 @@ for i in range(len(r)):
     plt.plot(k-r[i,1],t[np.argmin(t)],'*r')
     plt.xlabel('p-%f' %r[i,1])
     plt.grid()
-    #plt.savefig('ejercicio_4_%i.pdf' %int(r[i,0]))
+    plt.savefig('ejercicio_1_4_%i.pdf' %int(r[i,0]))
     plt.show()

@@ -7,6 +7,14 @@ Created on Sat Apr 20 19:31:43 2019
 import numpy as np
 from matplotlib import pyplot as plt
 
+d=2
+D=91/48
+nu=4/3
+tau_inf=1+d/D
+sigma_inf=1/(nu*D)
+gamma_inf=(3-tau_inf)/sigma_inf
+
+
 def ajuste_lineal(x,y):
     N=len(x)    
     Delta=N*sum(x**2)-sum(x)**2
@@ -23,16 +31,17 @@ p_c=0.5925
 #plt.xlim(right=0.02)
 
 plt.plot(datos[:,0],datos[:,1],'.')
-#plt.plot(p_c*np.array([1,1]),np.array([0,10**7]),'-')
-#plt.yscale('log')
+plt.plot(p_c*np.array([1,1]),np.array([0,10**7]),'-')
+plt.yscale('log')
 plt.grid()
 plt.savefig('Gamma_matching_1.pdf')
 plt.show()
 
-#plt.plot(abs(datos[:,0]-p_c),np.log(datos[:,1]),'.')
-#plt.grid()
-#plt.show()
-k=30
+plt.plot(abs(datos[:,0]-p_c),np.log(datos[:,1]),'.')
+plt.grid()
+plt.show()
+
+k=38
 
 gamma_mas=np.zeros(k)
 gamma_menos=np.zeros(k)
