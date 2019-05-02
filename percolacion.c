@@ -154,15 +154,16 @@ int main(int argc,char *argv[]){
 	
 	else if(item==14){
 		sscanf(argv[2],"%i",&dim);
+		printf("Corriendo ejercicio 1.d\n");
 		p=0.4;
 		int N=27000;
-		int D=60;
+		int D=36;
 		
 		for (int i=0; i<D+1; i++){
 			
 			char filename[64];
 			FILE *out;
-			sprintf(filename, "ej_1_d_p_%.4f_dim_%i.txt", p, dim);
+			sprintf(filename, "ej_1_d_p_%.4f_dim_%i_2.txt", p, dim);
 			out = fopen( filename, "w");
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
@@ -177,7 +178,8 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fclose(out);
-			p+=0.005;
+			printf("%f\n", p);
+			p+=0.01;
 		}
 	}
 	
@@ -253,14 +255,15 @@ int main(int argc,char *argv[]){
 	}
 	
 	else if(item==4){
-		p=0.59;
+		printf("Corriendo ejercicio 4\n");
+		p=0.611;
 		dim=64;
 		char filename[64];
 		FILE *out;
 		sprintf(filename, "ejercicio_4.txt");
-		out = fopen(filename,"w");
+		out = fopen(filename,"a");
 		int N=27000;
-		for(int i=0; i<51; i++){
+		for(int i=0; i<9; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
@@ -275,20 +278,22 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fprintf(out,"\n");
-			p+=0.0001;
+			printf("%.3f\n",p);
+			p+=0.001;
 		}
 		fclose(out);
 	}
 	
 	else if(item==5){
-		p=0.5875;
+		printf("Corriendo ejercicio 5\n");
+		p=0.701;
 		dim=64;
 		char filename[64];
 		FILE *out;
 		sprintf(filename, "ejercicio_5.txt");
-		out = fopen(filename,"w");
+		out = fopen(filename,"a");
 		int N=27000;
-		for(int i=0; i<101; i++){
+		for(int i=0; i<300; i++){
 			for(int j=0; j<N; j++){
 				asignar_proba(probabilidad,seed,dim);
 				poblar(red,probabilidad,dim,p);
@@ -302,7 +307,8 @@ int main(int argc,char *argv[]){
 				*(clusters+j)=0;
 			}
 			fprintf(out,"\n");
-			p+=0.0001;
+			printf("%.3f\n",p);
+			p+=0.001;
 		}
 		fclose(out);
 	}
