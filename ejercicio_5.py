@@ -51,7 +51,7 @@ def funcion_sigma(sigma):
     #plt.title('sigma=%.4f' % sigma)
     plt.title('$\sigma$=%f' %sigma)
     plt.yscale('log')
-    plt.xlim([-1.4,0.2])
+    plt.xlim([-1.4,0.7])
     plt.grid(True)
     plt.pause(0.1)
 
@@ -79,12 +79,15 @@ plt.plot(x,a*x+b,'-')
 plt.xlabel('Log(s)')
 plt.ylabel('Log($p_{max}-p_c$)')
 plt.grid()
+plt.xlim(left=-0.1)
+plt.title(r'$\sigma=$%.4f' %sigma)
+plt.savefig('sigma.pdf')
 plt.show()
 
 print('sigma=',sigma)
     
-for j in range(len(datos)):
-    funcion(j)
+#for j in range(len(datos)):
+#    funcion(j)
 
 sig=np.linspace(0.3,0.4,30)  
 for j in sig:

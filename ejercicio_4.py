@@ -23,9 +23,9 @@ def funcion(j):
     
     plt.clf()
     plt.plot(z,f_z,'.')
-    plt.title('p=%.4f' % datos[j,0])
+    plt.title('$p_c=%.4f$' % datos[j,0])
     plt.yscale('log')
-    plt.grid(True,'minor')
+    plt.grid()
     plt.pause(0.1)
     
 def funcion_2(j):

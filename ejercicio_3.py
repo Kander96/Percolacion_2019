@@ -7,7 +7,8 @@ Created on Sat Apr 13 17:58:58 2019
 import numpy  as np
 from matplotlib import pyplot as plt
 
-p=np.arange(0.5907,0.5947,0.001)
+#p=np.linspace(0.585,0.602,18)
+p=[0.585,0.593,0.602]
 
 def ajuste_lineal(x,y):
     N=len(x)    
@@ -18,21 +19,30 @@ def ajuste_lineal(x,y):
 
 D=91/48
 
-f=open("Dimension_fractal.txt","w")
+j=[18,10,5]
+
+f=open("Dimension_fractal_3.txt","w")
 f.write('D(inf)=\t%f\n' %D)
 
-for i in p:
+for i in range(len(p)):
    # print(i)
-    datos=np.loadtxt('ej_3_p_%.6f.txt' % i)
-    plt.plot(np.log(datos[:,0]),np.log(datos[:,1]),'.',label='p=%.4f' % i)    
-    a,b=ajuste_lineal(np.log(datos[:,0]),np.log(datos[:,1]))
-    print('D=',2+a)    
-    plt.show()
+    #plt.clf()    
+    datos=np.loadtxt('ej_3_p_%.6f_2.txt' % p[i])
+    plt.plot(np.log(datos[:,0]),np.log(datos[:,1]),'.',label='p=%.4f' % p[i])    
+    a,b=ajuste_lineal(np.log(datos[:j[i],0]),np.log(datos[:j[i],1]))
+    plt.plot(np.log(datos[:,0]),a*np.log(datos[:,0])+b,'-k')
+    print('D=',2+a) 
+    plt.legend()    
+    plt.grid()
+    plt.xlabel('Log(L)')
+    plt.ylabel(r'Log($\rho$)')
+    plt.pause(0.01)
+    #plt.show()
 #plt.plot([0,1],[0.5,0.5],'--')
 #plt.legend(loc= 'upper right')
     f.write('p=%f\tD=%f\n' %(i,2+a))
 f.close()
-
+plt.savefig('densidad_de_masa.pdf')
 
 
 #plt.xlabel('Log(ro)')

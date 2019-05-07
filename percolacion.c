@@ -232,13 +232,13 @@ int main(int argc,char *argv[]){
 		sscanf(argv[2],"%f",&p);
 		//p=0.5927;
 		int m;
-		int N=2000;
+		int N=27000;
 		int L=32;
 		char filename[64];
 		FILE *out;
-		sprintf(filename, "ej_3_p_%f.txt", p);
+		sprintf(filename, "ej_3_p_%f_2.txt", p);
 		out = fopen( filename, "w");
-		for(int j=4; j<L+1; j++){
+		for(int j=4; j<L+1; j+=2){
 			m=0;
 			for(int i=0; i<N; i++){
 				asignar_proba(probabilidad,seed,j);
